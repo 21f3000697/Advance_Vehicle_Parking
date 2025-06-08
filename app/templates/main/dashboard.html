@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Welcome, {{ current_user.username }}!</h2>
+
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Your Active Reservations</h4>
+                </div>
+                <div class="card-body">
+                    {% if current_user.reservations %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Parking Lot</th>
+                                    <th>Spot Number</th>
+                                    <th>Vehicle Number</th>
+                                    <th>Start Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reservation in current_user.reservations %}
+                                {% if reservation.status == 'active' %}
+                                <tr>
+                                    <td>{{ reservation.spot.lot.name }}</td>
+                                    <td>{{ reservation.spot.spot_number }}</td>
+                                    <td>{{ reservation.vehicle_number }}</td>
+                                    <td>{{ reservation.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        <span class="badge bg-success">Active</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('main.end_reservation', reservation_id=reservation.id) }}"
+                                            class="btn btn-warning btn-sm">End Reservation</a>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p>No active reservations.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('main.new_reservation') }}" class="btn btn-primary btn-lg btn-block mb-3 w-100">
+                        Book a Parking Spot
+                    </a>
+                    <a href="{{ url_for('main.reservation_history') }}"
+                        class="btn btn-secondary btn-lg btn-block w-100">
+                        View History
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

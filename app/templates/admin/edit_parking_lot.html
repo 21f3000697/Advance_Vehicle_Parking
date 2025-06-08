@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Parking Lot{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Edit Parking Lot</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ lot.name }}"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Prime Location</label>
+                            <input type="text" class="form-control" id="location" name="location"
+                                value="{{ lot.prime_location_name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Full Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="3"
+                                required>{{ lot.address }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pin_code" class="form-label">PIN Code</label>
+                            <input type="text" class="form-control" id="pin_code" name="pin_code"
+                                value="{{ lot.pin_code }}" required pattern="[0-9]{6}"
+                                title="Please enter a valid 6-digit PIN code">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price per Hour (₹)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" class="form-control" id="price" name="price"
+                                    value="{{ lot.price_per_hour }}" required min="0" step="0.01">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="max_spots" class="form-label">Maximum Parking Spots</label>
+                            <input type="number" class="form-control" id="max_spots" name="max_spots"
+                                value="{{ lot.maximum_spots }}" required min="1">
+                            <small class="form-text text-muted">Note: Reducing spots will only work if the excess spots
+                                are currently unoccupied.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="has_covered" name="has_covered" {%
+                                    if lot.has_covered_parking %}checked{% endif %}>
+                                <label class="form-check-label" for="has_covered">
+                                    Has Covered Parking
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="has_ev" name="has_ev" {% if
+                                    lot.has_ev_charging %}checked{% endif %}>
+                                <label class="form-check-label" for="has_ev">
+                                    Has EV Charging
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="has_wash" name="has_wash" {% if
+                                    lot.has_car_wash %}checked{% endif %}>
+                                <label class="form-check-label" for="has_wash">
+                                    Has Car Wash Service
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h5>Price Multipliers</h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="peak_multiplier" class="form-label">Peak Hour Rate</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="peak_multiplier"
+                                            name="peak_multiplier" value="{{ lot.peak_hour_multiplier }}" step="0.1"
+                                            min="1" max="3">
+                                        <span class="input-group-text">x</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="weekend_multiplier" class="form-label">Weekend Rate</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="weekend_multiplier"
+                                            name="weekend_multiplier" value="{{ lot.weekend_multiplier }}" step="0.1"
+                                            min="1" max="3">
+                                        <span class="input-group-text">x</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Parking Lot</button>
+                            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

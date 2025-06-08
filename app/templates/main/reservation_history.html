@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Your Reservation History</h2>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Parking Lot</th>
+                            <th>Spot Number</th>
+                            <th>Vehicle Number</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Total Cost</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reservation in reservations %}
+                        <tr>
+                            <td>{{ reservation.spot.lot.name }}</td>
+                            <td>{{ reservation.spot.spot_number }}</td>
+                            <td>{{ reservation.vehicle_number }}</td>
+                            <td>{{ reservation.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {% if reservation.end_time %}
+                                {{ reservation.end_time.strftime('%Y-%m-%d %H:%M') }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>₹{{ "%.2f"|format(reservation.total_cost or 0) }}</td>
+                            <td>
+                                {% if reservation.status == 'active' %}
+                                <span class="badge bg-success">Active</span>
+                                {% elif reservation.status == 'completed' %}
+                                <span class="badge bg-secondary">Completed</span>
+                                {% else %}
+                                <span class="badge bg-danger">Cancelled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if not reservations %}
+            <p class="text-center">No reservation history found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

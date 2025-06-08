@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Available Parking Lots</h2>
+
+    <div class="row mt-4">
+        {% for lot in lots %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ lot.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ lot.prime_location_name }}</h6>
+                    <p class="card-text">
+                        <strong>Address:</strong> {{ lot.address }}<br>
+                        <strong>PIN Code:</strong> {{ lot.pin_code }}<br>
+                        <strong>Price:</strong> ₹{{ "%.2f"|format(lot.price_per_hour) }}/hour<br>
+                        <strong>Available Spots:</strong>
+                        {% set available = lot.spots|selectattr('status', 'equalto', 'A')|list|length %}
+                        {{ available }}/{{ lot.maximum_spots }}
+                    </p>
+                    {% if available > 0 %}
+                    <a href="{{ url_for('main.book_spot', lot_id=lot.id) }}" class="btn btn-primary">Book a Spot</a>
+                    {% else %}
+                    <button class="btn btn-secondary" disabled>No Spots Available</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
